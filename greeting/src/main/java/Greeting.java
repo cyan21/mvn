@@ -16,4 +16,11 @@ public class Greeting {
     public static String sp() {
         return "Hola";
     }
+
+    public static void main(String[] args) {
+	Greeting g = new Greeting();
+        System.out.println("french guy says " + g.fr());
+        System.out.println("spanish guy says " + g.sp());
+        System.out.println("english guy says " + g.en());
+    }
 }
