@@ -30,7 +30,7 @@
                     <manifest>
                         <addClasspath>true</addClasspath>
                         <classpathPrefix>lib/</classpathPrefix>
-                        <mainClass>add your main class</mainClass>
+                        <mainClass>org.ych.Test</mainClass>
                     </manifest>
                 </archive>
             </configuration>
