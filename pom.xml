@@ -5,15 +5,15 @@
   <groupId>org.ych</groupId>
   <artifactId>parent</artifactId>
   <packaging>pom</packaging>
-  <version>${super.version}</version>
+  <version>1.0.0-SNAPSHOT</version>
 
   <name>Super parent</name>
 
 
   <modules>
-        <module>../greeting</module>
-        <module>../living</module>
-        <module>../warapp</module>
+        <module>greeting</module>
+        <module>living</module>
+        <module>warapp</module>
   </modules>
 
   <properties>
