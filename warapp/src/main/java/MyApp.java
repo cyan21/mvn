@@ -1,7 +1,5 @@
 package org.ych.app;
 
-import org.ych.Human;
-
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
