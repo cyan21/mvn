@@ -14,6 +14,6 @@ public class MyApp extends HttpServlet {
 
 	@Override
 	public void service(ServletRequest reqest, ServletResponse response) throws ServletException, IOException {
-		response.getWriter().println("Human says : " + Human.says());
+		response.getWriter().println("Human says : Friday is good, monday is bad");
 	}
 }
