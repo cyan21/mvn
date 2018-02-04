@@ -17,10 +17,30 @@ public class Greeting {
         return "Hola";
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException { 
+
 	Greeting g = new Greeting();
-        System.out.println("french guy says " + g.fr());
-        System.out.println("spanish guy says " + g.sp());
-        System.out.println("english guy says " + g.en());
+	int cnt = 0, max = 100, tmp = 0, sleep_time = 5000;
+	
+	for (;;) {
+
+        	System.out.println("french guy says " + g.fr());
+		Thread.sleep(sleep_time);
+
+	        System.out.println("spanish guy says " + g.sp());
+		Thread.sleep(sleep_time);
+
+       		System.out.println("english guy says " + g.en());
+		Thread.sleep(sleep_time);
+
+		if (cnt == max ) {
+			tmp = max - cnt;	
+        		System.out.println("I'm done, bye");
+			break;
+		} else 
+			cnt++;
+	
+	}
+	
     }
 }
