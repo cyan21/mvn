@@ -1,0 +1,84 @@
+buildscript {
+    repositories {
+	jcenter {
+        	credentials {
+            		username "${artifactory_user}"
+            		password "${artifactory_password}"
+        	}
+
+		url "http://192.168.41.41:8081/artifactory/gradle-release/"
+	}
+    }
+
+    dependencies {
+        //Check for the latest version here: http://plugins.gradle.org/plugin/com.jfrog.artifactory
+        classpath("org.jfrog.buildinfo:build-info-extractor-gradle:4+")
+
+    }
+}
+
+
+allprojects {
+
+apply plugin: 'java'
+apply plugin: 'com.jfrog.artifactory'
+apply plugin: 'maven-publish'
+
+
+description = """"""
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+
+group = 'org.ych'
+version = '1.0.0-SNAPSHOT'
+
+
+dependencies {
+    compile group: 'org.junit.platform', name: 'junit-platform-runner', version:'1.0.0'
+    compile group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version:'5.0.0'
+    testCompile group: 'org.junit.vintage', name: 'junit-vintage-engine', version:'4.12.0'
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+}
+
+} // end subprojects
+
+artifactoryPublish.skip = true
+
+artifactory {
+    contextUrl = "${artifactory_contextUrl}"   //The base Artifactory URL if not overridden by the publisher/resolver
+    publish {
+        repository {
+            repoKey = 'gradle-dev-local'
+            username = "${artifactory_user}"
+            password = "${artifactory_password}"
+            maven = true
+            
+        }
+        defaults {
+            publications ('mavenJava')
+        }
+    }
+    resolve {
+        repository {
+            repoKey = 'gradle-release'
+            username = "${artifactory_user}"
+            password = "${artifactory_password}"
+            maven = true
+            
+        }
+    }
+} // artifactory
+
