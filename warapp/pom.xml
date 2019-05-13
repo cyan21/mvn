@@ -4,7 +4,7 @@
   <groupId>org.ych.app</groupId>
   <artifactId>warapp</artifactId>
   <packaging>war</packaging>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>1.0.0</version>
 
   <name>warapp Maven Webapp</name>
 
@@ -12,7 +12,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <living.version>1.0.0-SNAPSHOT</living.version>
+        <living.version>1.0.0</living.version>
   </properties>
 
   <dependencies>
