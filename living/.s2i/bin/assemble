@@ -12,7 +12,7 @@ pwd
 echo "===================="
 echo "look for my jar file"
 echo "===================="
-find / -name "*.jar"
+ls -l 
 
 echo "===================="
 echo "environment variables"
