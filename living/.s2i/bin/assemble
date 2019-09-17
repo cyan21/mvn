@@ -1,0 +1,26 @@
+#!/bin/bash
+
+#/cygdrive/c/Users/yannc/.m2/repository/org/ych/greeting/1.0.2-SNAPSHOT
+MVN_LOCAL_REPO="/opt/app-root/src/.m2/repository/"
+#MVN_LOCAL_REPO=$(pwd)
+
+echo "maven local repo: $MVN_LOCAL_REPO"
+
+src_folder=${TMP_FOLDER:-/tmp/}
+grp_id=${GRP_ID:-corp/capsule}
+art_id=${ARTIFACT_ID:-kame}
+art_vers=${ARTIFACT_VERS:-1.1.1-SNAPSHOT}
+
+echo "groupID : $grp_id"
+echo "artifactID : $art_id"
+echo "artifactVersion : $art_vers"
+
+dest_folder="${MVN_LOCAL_REPO}/${grp_id}/${art_id}/${art_vers}"
+echo $dest_folder
+
+mkdir -p $dest_folder
+
+cp ${src_folder}/* ${dest_folder}/
+
+ls -l ${dest_folder}
+
