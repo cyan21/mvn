@@ -1,8 +1,26 @@
 #!/bin/bash
 
 #/cygdrive/c/Users/yannc/.m2/repository/org/ych/greeting/1.0.2-SNAPSHOT
-MVN_LOCAL_REPO="/opt/app-root/src/.m2/repository/"
+MVN_LOCAL_REPO="/opt/app-root/src/.m2/repository"
 #MVN_LOCAL_REPO=$(pwd)
+
+echo "===================="
+echo "current path"
+echo "===================="
+pwd
+
+echo "===================="
+echo "list current path"
+echo "===================="
+ls -l .
+
+echo "===================="
+echo "environment variables"
+echo "===================="
+env
+
+echo "===================="
+echo "===================="
 
 echo "maven local repo: $MVN_LOCAL_REPO"
 
@@ -18,9 +36,8 @@ echo "artifactVersion : $art_vers"
 dest_folder="${MVN_LOCAL_REPO}/${grp_id}/${art_id}/${art_vers}"
 echo $dest_folder
 
-mkdir -p $dest_folder
+#mkdir -p $dest_folder
 
-cp ${src_folder} ${dest_folder}/
+#cp ${src_folder} ${dest_folder}/
 
-ls -l ${dest_folder}
-
+#ls -l ${dest_folder}
