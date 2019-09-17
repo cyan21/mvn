@@ -10,9 +10,9 @@ echo "===================="
 pwd
 
 echo "===================="
-echo "list current path"
+echo "look for my jar file"
 echo "===================="
-ls -l .
+find / -name "*.jar"
 
 echo "===================="
 echo "environment variables"
