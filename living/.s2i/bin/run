@@ -5,18 +5,18 @@
 # Due to the decision tree in the Dockerfile, if we just copy the module script in, it's not recognised at runtime.
 # If we have this here, then use it to bootstrap the module run script, everything works.
 
-exec $S2I_SCRIPT_DIR/run
+exec echo "yahooo"
 
-S2I_SCRIPT_DIR="/usr/libexec/s2i"
+#S2I_SCRIPT_DIR="/usr/libexec/s2i"
 
-if [ -f /deployments/scripts/$MODULE_DIR/run ]; then
+#if [ -f /deployments/scripts/$MODULE_DIR/run ]; then
 
-   echo "Using module-specific run script"
-   exec /deployments/scripts/$MODULE_DIR/run
+#   echo "Using module-specific run script"
+#   exec /deployments/scripts/$MODULE_DIR/run
 
-else
+#else
 
-   echo "Using default run script"
-   exec $S2I_SCRIPT_DIR/run
+#   echo "Using default run script"
+#   exec $S2I_SCRIPT_DIR/run
 
-fi
+#fi
