@@ -20,7 +20,7 @@ echo $dest_folder
 
 mkdir -p $dest_folder
 
-cp ${src_folder}/* ${dest_folder}/
+cp ${src_folder} ${dest_folder}/
 
 ls -l ${dest_folder}
 
