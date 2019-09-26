@@ -1,0 +1,14 @@
+#!/bin/bash -e
+
+env
+
+ls -lR /tmp/
+
+mkdir -p /opt/app-root/src/.m2/repository/org/ych/greeting/1.0.0/
+
+mv /tmp/src/*.jar /opt/app-root/src/.m2/repository/org/ych/greeting/1.0.0/
+
+ls -l /opt/app-root/src/.m2/repository/org/ych/greeting/1.0.0/
+
+/usr/libexec/s2i/assemble
+
