@@ -4,8 +4,8 @@
   <servers>
     <server>
       <id>central</id>
-      <username>admin</username>
-      <password>AKCp5btpCwjQnQr3QSZv7XK7i7W7Yf1BXyzdXqsUKPePDHqYE3HLDPHdF9F7spexvso3sNJSN</password>
+      <username>yannc@jfrog.com</username>
+      <password>AKCp5ccGJYKjT4Ssrs2G4ScEj7sWoh3dUQpZ6sWhaJVzD8ETeAn9nGCjwRHU46h1yQPKB1d1V</password>
     </server>
   </servers>
   <profiles>
@@ -17,13 +17,13 @@
           </snapshots>
           <id>central</id>
           <name>yannc-mvn-releases</name>
-          <url>http://192.168.51.51:8081/artifactory/Zteam-maven</url>
+          <url>http://http://artifactory-eu.soleng-emea.jfrog.team/artifactory/libs-release</url>
         </repository>
         <repository>
           <snapshots />
           <id>central-snapshot</id>
           <name>yannc-mvn-snapshots</name>
-          <url>http://192.168.51.51:8081/artifactory/Zteam-maven</url>
+          <url>http://http://artifactory-eu.soleng-emea.jfrog.team/artifactory/libs-snapshot</url>
         </repository>
       </repositories>
 
@@ -34,13 +34,13 @@
           </snapshots>
           <id>central</id>
           <name>yannc-mvn-releases</name>
-          <url>http://192.168.51.51:8081/artifactory/Zteam-maven</url>
+          <url>http://http://artifactory-eu.soleng-emea.jfrog.team/artifactory/libs-release</url>
         </pluginRepository>
         <pluginRepository>
           <snapshots/>
           <id>snapshots</id>
           <name>yannc-mvn-snapshots</name>
-          <url>http://192.168.51.51:8081/artifactory/Zteam-maven</url>
+          <url>http://http://artifactory-eu.soleng-emea.jfrog.team/artifactory/libs-snapshot</url>
         </pluginRepository>
       </pluginRepositories>
       <id>artifactory</id>
