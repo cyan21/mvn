@@ -4,7 +4,7 @@ RUN apt-get update && \
     apt-get install -y git && \
     rm -rf /var/lib/apt/lists/*
 
-RUN git clone https://github.com/cyan21/mvn.git -b multi-module
+RUN git clone https://github.com/cyan21/mvn.git -b multi-module-jfrog
 
 COPY settings.xml /usr/share/maven/ref/
 
