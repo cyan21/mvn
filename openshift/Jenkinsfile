@@ -1,0 +1,90 @@
+//def templatePath = 'https://raw.githubusercontent.com/openshift/nodejs-ex/master/openshift/templates/nodejs-mongodb.json' 
+def templateName = 'simple-java-app'
+pipeline {
+  agent any
+
+  options {
+    timeout(time: 20, unit: 'MINUTES') 
+  }
+
+  environment {
+    PATH = "$PATH:/opt/openshift-client"
+  }  
+
+  parameters {
+    string(name: 'cluster_name', defaultValue: 'minishift', description: 'Openshift cluster name')
+    string(name: 'project_name', defaultValue: 'yann-3', description: 'Openshift cluster name')
+  }
+
+  stages {
+    stage('preamble') {
+        steps {
+            script {
+                openshift.withCluster("${params.cluster_name}") {
+                    openshift.withProject("${params.project_name}") {
+                        echo "Using project: ${openshift.project()}"
+                    }
+                }
+            }
+        }
+    }
+/*
+    stage('create') {
+      steps {
+        script {
+          openshift.withCluster("${params.cluster_name}") {
+            openshift.withProject("${params.project_name}") {
+              openshift.newApp(templatePath) 
+            }
+          }
+        }
+      }
+    }
+*/
+    stage('build') {
+      steps {
+        script {
+          openshift.withCluster("${params.cluster_name}") {
+            openshift.withProject("${params.project_name}") {
+              def builds = openshift.selector("bc", templateName).related('builds')
+              timeout(5) { 
+                builds.untilEach(1) {
+                  return (it.object().status.phase == "Complete")
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+/*
+    stage('deploy') {
+      steps {
+        script {
+            openshift.withCluster() {
+                openshift.withProject() {
+                  def rm = openshift.selector("dc", templateName).rollout().latest()
+                  timeout(5) { 
+                    openshift.selector("dc", templateName).related('pods').untilEach(1) {
+                      return (it.object().status.phase == "Running")
+                    }
+                  }
+                }
+            }
+        }
+      }
+    }
+    stage('tag') {
+      steps {
+        script {
+            openshift.withCluster() {
+                openshift.withProject() {
+                  openshift.tag("${templateName}:latest", "${templateName}-staging:latest") 
+                }
+            }
+        }
+      }
+    }
+*/
+  }
+}

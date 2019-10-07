@@ -1,0 +1,12 @@
+kind: "BuildConfig"
+apiVersion: "v1"
+metadata:
+  name: "my-simple-app"
+spec:
+  source:
+    git:
+      uri: "https://github.com/cyan21/mvn"
+      ref: "s2i"
+  strategy:
+    jenkinsPipelineStrategy:
+      jenkinsfilePath: openshift/Jenkisfile
