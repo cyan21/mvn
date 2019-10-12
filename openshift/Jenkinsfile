@@ -13,7 +13,7 @@ pipeline {
 
   parameters {
     string(name: 'cluster_name', defaultValue: 'minishift', description: 'Openshift cluster name')
-    string(name: 'project_name', defaultValue: 'yann3', description: 'Openshift cluster name')
+    string(name: 'project_name', defaultValue: 'yann', description: 'Openshift cluster name')
   }
 
   stages {
