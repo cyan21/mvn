@@ -46,7 +46,8 @@ pipeline {
         script {
           openshift.withCluster("${params.cluster_name}") {
             openshift.withProject("${params.project_name}") {
-              def builds = openshift.selector("bc", "mvn-greeting").related('builds')
+//              def builds = openshift.selector("bc", "mvn-greeting").related('builds')
+              def builds = openshift.selector("bc", "mvn-greeting").startBuild()
               timeout(5) { 
                 builds.untilEach(1) {
                   return (it.object().status.phase == "Complete")
