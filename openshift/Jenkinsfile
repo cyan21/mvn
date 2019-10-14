@@ -1,91 +1,111 @@
-//def templatePath = 'https://raw.githubusercontent.com/openshift/nodejs-ex/master/openshift/templates/nodejs-mongodb.json' 
-def templateName = 'mvn-greeting'
 pipeline {
-  agent any
-/*
-  options {
-    timeout(time: 20, unit: 'MINUTES') 
-  }
+ 
+    agent any
+ /*    
+    options {
+        timeout(time: 20, unit: 'MINUTES') 
+    }
 */
-  environment {
-    PATH = "$PATH:/opt/openshift-client"
-  }  
+    environment {
+      PATH = "$PATH:/opt/openshift-client"
+      CLUSTER_NAME = "minishift"
+      PROJECT_NAME = "yann-test"
+      CREATE_APP = 'false'
+      TEMPLATE_URL = ""
+      BUILD_NAME = "mvn-app"
+    }  
 
-  parameters {
-    string(name: 'cluster_name', defaultValue: 'minishift', description: 'Openshift cluster name')
-    string(name: 'project_name', defaultValue: 'yann', description: 'Openshift cluster name')
-  }
+    stages {
 
-  stages {
-    stage('preamble') {
-        steps {
-            script {
-                openshift.withCluster("${params.cluster_name}") {
-                    openshift.withProject("${params.project_name}") {
-                        echo "Using project: ${openshift.project()}"
+        stage('preamble') {
+            steps {
+                script {
+                    openshift.withCluster(env.CLUSTER_NAME) {
+                        openshift.withProject(env.PROJECT_NAME) {
+                            echo "Using project: ${openshift.project()}"
+                        }
                     }
                 }
             }
         }
-    }
-/*
-    stage('create') {
-      steps {
-        script {
-          openshift.withCluster("${params.cluster_name}") {
-            openshift.withProject("${params.project_name}") {
-              openshift.newApp(templatePath) 
+    
+        stage('create') {
+            when { 
+                environment  name : 'CREATE_APP', value: 'true'  
             }
-          }
-        }
-      }
-    }
-*/
-    stage('build') {
-      steps {
-        script {
-          openshift.withCluster("${params.cluster_name}") {
-            openshift.withProject("${params.project_name}") {
-//              def builds = openshift.selector("bc", "mvn-greeting").related('builds')
-              def builds = openshift.selector("bc", "mvn-greeting").startBuild()
-              timeout(5) { 
-                builds.untilEach(1) {
-                  return (it.object().status.phase == "Complete")
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-/*
-    stage('deploy') {
-      steps {
-        script {
-            openshift.withCluster() {
-                openshift.withProject() {
-                  def rm = openshift.selector("dc", templateName).rollout().latest()
-                  timeout(5) { 
-                    openshift.selector("dc", templateName).related('pods').untilEach(1) {
-                      return (it.object().status.phase == "Running")
+
+            steps {
+                script {
+                    openshift.withCluster(env.CLUSTER_NAME) {
+                        openshift.withProject(env.PROJECT_NAME) {
+//                        openshift.newApp("${TEMPLATE_URL}") 
+                            echo "CREATION !!!"
+                        }
                     }
-                  }
+                }
+            }
+        } // end stage
+    
+        stage('build') {
+            steps {
+                script {
+                    openshift.withCluster(env.CLUSTER_NAME) {
+                        openshift.withProject(env.PROJECT_NAME) {
+                            def builds = openshift.selector("bc", env.BUILD_NAME).startBuild()
+//                            def builds = openshift.startBuild(env.BUILD_NAME)
+
+                            timeout(5) { 
+                                builds.untilEach(1) {
+                                   echo "build : ${it.name()}"
+//                                    echo "${it.object()}"
+                                    return (it.object().status.phase == "Complete")
+                                }
+                            }
+  /*
+                            builds.withEach {
+                                echo "new-build created resource: ${it.name()}"
+                            }
+  */
+                        }
+                    }
+                }
+            }
+        } // end build stage
+    
+       
+        stage('deploy') {
+            steps {
+                script {
+                    openshift.withCluster(env.CLUSTER_NAME) {
+                        openshift.withProject(env.PROJECT_NAME) {    
+                            timeout(5) { 
+                                openshift.selector("dc", [ app: "my-java-app" ]).related('pods').untilEach(1) {
+                                    echo "pod : ${it.name()}"
+                                    return (it.object().status.phase == "Running")
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } // end build stage
+
+        stage('test') {
+            steps {
+                sh 'echo Testing ...'
+            }
+        }
+        
+        stage('tag') {
+            steps {
+                script {
+                    openshift.withCluster(env.CLUSTER_NAME) {
+                        openshift.withProject(env.PROJECT_NAME) {   
+                            openshift.tag("myapp:dev", "myapp:stage") 
+                        }
+                    }
                 }
             }
         }
-      }
-    }
-    stage('tag') {
-      steps {
-        script {
-            openshift.withCluster() {
-                openshift.withProject() {
-                  openshift.tag("${templateName}:latest", "${templateName}-staging:latest") 
-                }
-            }
-        }
-      }
-    }
-*/
-  }
+    } // end stages   
 }

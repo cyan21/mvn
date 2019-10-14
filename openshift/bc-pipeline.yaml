@@ -9,4 +9,4 @@ spec:
       ref: "s2i"
   strategy:
     jenkinsPipelineStrategy:
-      jenkinsfilePath: openshift/Jenkisfile
+      jenkinsfilePath: openshift/Jenkinsfile
