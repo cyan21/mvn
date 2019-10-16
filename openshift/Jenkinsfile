@@ -1,19 +1,17 @@
 pipeline {
  
     agent any
- /*    
-    options {
-        timeout(time: 20, unit: 'MINUTES') 
-    }
-*/
-    environment {
-      PATH = "$PATH:/opt/openshift-client"
-      CLUSTER_NAME = "minishift"
-      PROJECT_NAME = "yann-test"
-      CREATE_APP = 'false'
-      TEMPLATE_URL = ""
-      BUILD_NAME = "mvn-app"
-    }  
+ 
+  environment {
+    PATH = "$PATH:/opt/openshift-client"
+    CLUSTER_NAME = "minishift"
+    PROJECT_NAME = "yann-test"
+    CREATE_APP = 'false'
+    TEMPLATE_URL = ""
+    PIPE_TIME_OUT = 10
+    LIST_BUILD = 'mvn-greeting,mvn-living,mvn-app,my-java-app'
+    APP_NAME = 'my-java-app'
+  }  
 
     stages {
 
@@ -29,58 +27,71 @@ pipeline {
             }
         }
     
-        stage('create') {
+        stage('create app') {
             when { 
                 environment  name : 'CREATE_APP', value: 'true'  
             }
-
-            steps {
-                script {
-                    openshift.withCluster(env.CLUSTER_NAME) {
-                        openshift.withProject(env.PROJECT_NAME) {
-//                        openshift.newApp("${TEMPLATE_URL}") 
-                            echo "CREATION !!!"
-                        }
-                    }
-                }
-            }
-        } // end stage
     
-        stage('build') {
             steps {
                 script {
                     openshift.withCluster(env.CLUSTER_NAME) {
                         openshift.withProject(env.PROJECT_NAME) {
-                            def builds = openshift.selector("bc", env.BUILD_NAME).startBuild()
-//                            def builds = openshift.startBuild(env.BUILD_NAME)
-
+                            openshift.newApp(env.TEMPLATE_URL) 
+/*                            
                             timeout(5) { 
-                                builds.untilEach(1) {
-                                   echo "build : ${it.name()}"
-//                                    echo "${it.object()}"
+                                openshift.selector("bc", env.BUILD_NAME).related('builds').untilEach(1) {
+                                    echo "build : ${it.name()}"
+                                    echo "${it.object()}"
                                     return (it.object().status.phase == "Complete")
                                 }
                             }
-  /*
-                            builds.withEach {
-                                echo "new-build created resource: ${it.name()}"
-                            }
-  */
+*/
+                            echo "Not loading the template, objects already exist !!!"
                         }
                     }
                 }
             }
-        } // end build stage
+        }
     
-       
-        stage('deploy') {
+        stage('build App') {
+            when { 
+                environment  name : 'CREATE_APP', value: 'false'  
+            }
+
+            steps {
+                script {
+
+                    openshift.withCluster(env.CLUSTER_NAME) {
+                        openshift.withProject(env.PROJECT_NAME) {
+
+                            def build_names = "${LIST_BUILD}".split(',');
+                            echo "first build : ${build_names[0]}"
+                            openshift.startBuild(build_names[0])
+
+                            for (build in build_names)  {
+                                timeout(env.PIPE_TIME_OUT) { 
+                                    echo "checking ${build} ..."
+                                    openshift.selector('bc',[ build: "${build}"]).related('builds').untilEach(1) {
+                                        echo "build: ${it.name()}, status: ${it.object().status.phase}"
+                                        return (it.object().status.phase == "Complete")
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    
+       stage('deploy runtime app') {
             steps {
                 script {
                     openshift.withCluster(env.CLUSTER_NAME) {
                         openshift.withProject(env.PROJECT_NAME) {    
-                            timeout(5) { 
-                                openshift.selector("dc", [ app: "my-java-app" ]).related('pods').untilEach(1) {
-                                    echo "pod : ${it.name()}"
+                            timeout(env.PIPE_TIME_OUT) { 
+                                openshift.selector("dc", env.APP_NAME).related('pods').untilEach(1) {
+                                    echo "dc: ${it.name()}"
+                                    echo "${it.object()}"
                                     return (it.object().status.phase == "Running")
                                 }
                             }
@@ -88,14 +99,14 @@ pipeline {
                     }
                 }
             }
-        } // end build stage
+       } // end stage
 
         stage('test') {
             steps {
                 sh 'echo Testing ...'
             }
         }
-        
+/*        
         stage('tag') {
             steps {
                 script {
@@ -107,5 +118,7 @@ pipeline {
                 }
             }
         }
-    } // end stages   
+*/
+    } // end stages
+    
 }
