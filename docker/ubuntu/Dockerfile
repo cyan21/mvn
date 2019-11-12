@@ -6,9 +6,10 @@ RUN apt-get update && \
 
 RUN git clone https://github.com/cyan21/mvn.git -b multi-module
 
-COPY settings.xml /usr/share/maven/ref/
+#COPY settings.xml /usr/share/maven/ref/
 
-RUN cd mvn && mvn -f parent/pom.xml install -s /usr/share/maven/ref/settings.xml 
+#RUN cd mvn && mvn -f parent/pom.xml install -s /usr/share/maven/ref/settings.xml 
+RUN cd mvn && mvn install
 
 EXPOSE 8099
 
