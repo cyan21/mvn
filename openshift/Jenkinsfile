@@ -77,7 +77,7 @@ pipeline {
                         openshift.withProject(env.PROJECT_NAME) {
                             def imageId = openshift.selector("bc/mvn-greeting").related('builds').objects().last().spec.output.to.name
                             def imagePath = imageId.split('/')[1].replace(":","/")
-                            sh "ts=\$(date --rfc-3339=seconds)  && ./bic ${JOB_NAME} ${BUILD_NUMBER} \"\$ts\" ${imagePath}"
+                            sh "ts=\$(date --rfc-3339=seconds)  && ./bic openshift-mvn ${BUILD_NUMBER} \"\$ts\" ${imagePath}"
                         }
                     }
                 }
