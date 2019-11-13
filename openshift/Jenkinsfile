@@ -13,7 +13,7 @@ pipeline {
 //        LIST_BUILD = 'mvn-greeting,mvn-living,mvn-app,my-java-app'
 
         // for Build Info Creator
-        ART_URL="http://192.168.51.51:8081/artifactory/"
+        ART_URL="http://192.168.51.51:8081/artifactory"
         ART_USER="admin"
         ART_PASS="password"    
     }  
@@ -56,7 +56,7 @@ pipeline {
         stage('Generate and Publish Build Info') {
             steps {
                 sh 'echo Generate'
-
+/*
                 rtDownload (
                     serverId: 'arty-7',
                     spec: '''{
@@ -68,6 +68,8 @@ pipeline {
                           ]
                     }'''
                 )
+*/
+                sh 'curl -u${ART_USER}:${ART_PASS} -O ${ART_URL}/tool-generic/bic'
                 sh 'chmod u+x bic'
 
                 script {
